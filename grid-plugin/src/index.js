@@ -1,4 +1,3 @@
-import Vue from "vue";
 import Grid from "./packages/Grid";
 
 export default {

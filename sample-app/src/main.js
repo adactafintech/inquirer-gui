@@ -68,8 +68,8 @@ const questions1 = [
 
   {
     type: "grid",
-    name: "birthday",
-    message: "Birthday"
+    name: "grid",
+    message: "Grid"
 },
   {
       type: "input",

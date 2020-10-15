@@ -1,41 +1,46 @@
+
 <template>
-  <v-menu
-    :close-on-content-click="false"
-    :nudge-right="40"
-    transition="scale-transition"
-    offset-y
-    min-width="290px"
-  >
-    <template v-slot:activator="{ on }">
-      <v-text-field
-        v-model="date"
-        prepend-icon="event"
-        readonly
-        v-on="on"
-        hide-details="auto"
-        outlined
-        dense
-      ></v-text-field>
-    </template>
-    <v-date-picker v-model="date" @input="onInput"></v-date-picker>
-  </v-menu>
+   <ag-grid-vue style="width: 500px; height: 300px;"
+        class="ag-theme-alpine"
+        :columnDefs="columnDefs"
+        :rowData="rowData">
+    </ag-grid-vue>
 </template>
 
 <script>
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import { AgGridVue } from "ag-grid-vue";
 export default {
   name: "Grid",
   props: {
-    question: Object
+    question: Object,
   },
-  data: () => ({
-    date: new Date().toISOString().substr(0, 10)
-  }),
+  data: () => {
+    return {
+     columnDefs: null,
+            rowData: null
+    };
+  },
+    components: {
+    AgGridVue,
+  },
+  beforeMount() {
+    this.columnDefs = [
+      { headerName: "Make", field: "make" },
+      { headerName: "Model", field: "model" },
+      { headerName: "Price", field: "price" },
+    ];
+
+    this.rowData = [
+      { make: "Toyota", model: "Celica", price: 35000 },
+      { make: "Ford", model: "Mondeo", price: 32000 },
+      { make: "Porsche", model: "Boxter", price: 72000 },
+    ];
+  },
   methods: {
-    onInput(answer) {
-      if (answer !== undefined) {
-        this.$emit("answerChanged", this.question.name, answer);
-      }
-    }
-  }
+  },
+
 };
 </script>
