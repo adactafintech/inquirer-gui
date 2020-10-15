@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: "QuestionDateTime",
+  name: "Grid",
   props: {
     question: Object
   },

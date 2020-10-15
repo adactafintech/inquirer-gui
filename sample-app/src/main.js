@@ -65,6 +65,12 @@ const questions1 = [
       name: "birthday",
       message: "Birthday"
   },
+
+  {
+    type: "grid",
+    name: "birthday",
+    message: "Birthday"
+},
   {
       type: "input",
       name: "name",

@@ -27,7 +27,7 @@ import { RpcBrowser } from "@sap-devx/webview-rpc/out.browser/rpc-browser";
 import { RpcBrowserWebSockets } from "@sap-devx/webview-rpc/out.browser/rpc-browser-ws";
 import main from "./main.js";
 import DatePlugin from "@sap-devx/inquirer-gui-date-plugin";
-import GridPlugin from "@sap-devx/inquirer-gui-grid-plugin";
+// import GridPlugin from "@sap-devx/inquirer-gui-grid-plugin";
 import FileBrowserPlugin from "@sap-devx/inquirer-gui-file-browser-plugin";
 import LoginPlugin from "@sap-devx/inquirer-gui-login-plugin";
 import TilesPlugin from "@sap-devx/inquirer-gui-tiles-plugin";
@@ -37,9 +37,11 @@ import QuestionSampleTiles from "./QuestionSampleTiles";
  * If you want to make changes to the plugins from source in this repo
  * do not consume them from npm:
 import DatePlugin from "../../sample-plugin/src/index";
-import GridPlugin from "../../grid-plugin/src/index";
+
 import FileBrowserPlugin from "../../file-browser-plugin/src/index";
  */
+
+ import GridPlugin from "../../grid-plugin/src/index";
 
 export default {
   name: "app",
@@ -120,7 +122,7 @@ export default {
     Vue.use(DatePlugin, options);
     this.$refs.form.registerPlugin(options.plugin);
 
-    let options = {};
+    options = {};
     Vue.use(GridPlugin, options);
     this.$refs.form.registerPlugin(options.plugin);
 
