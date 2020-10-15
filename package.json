@@ -1,7 +1,7 @@
 {
-  "name": "@sap-devx/inquirer-gui",
+  "name": "@osla/inquirer-gui",
   "displayName": "Inquirer GUI",
-  "version": "0.1.19",
+  "version": "1.0.0",
   "publisher": "SAP",
   "author": {
     "name": "Eyal Barlev",
@@ -10,7 +10,7 @@
   "description": "Inquirer Graphical User Interface",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/inquirer-gui"
+    "url": "https://github.com/adactafintech/inquirer-gui"
   },
   "license": "Apache-2.0",
   "main": "dist/form.umd.js",
