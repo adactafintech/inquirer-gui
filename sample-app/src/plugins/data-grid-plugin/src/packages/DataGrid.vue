@@ -23,9 +23,9 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { AgGridVue } from "ag-grid-vue";
-import TableGridButtons from "./TableGridButtons";
+import DataGridButtons from "./DataGridButtons";
 export default {
-  name: "TableGrid",
+  name: "DataGrid",
   props: {
     question: Object,
   },
@@ -54,7 +54,7 @@ export default {
     initGrid() {
       this.gridContext = { componentParent: this };
       this.frameworkComponents = {
-        tableGridButtons: TableGridButtons,
+        dataGridButtons: DataGridButtons,
       };
 
       this.defaultColDef = {
@@ -81,7 +81,7 @@ export default {
       this.columnDefs.push({
         field: "",
         pinned: "right",
-        cellRendererFramework: TableGridButtons,
+        cellRendererFramework: DataGridButtons,
         width: 50,
         editable: false
       });
