@@ -10,8 +10,6 @@
       :context="gridContext"
       :frameworkComponents="frameworkComponents"
       :gridOptions="gridOptions"
-      :singleClickEdit="true"
-      :components="frameworkComponents"
       @grid-ready="onGridReady"
       @cell-value-changed="handleCellValueChanged"
     >
@@ -97,7 +95,7 @@ export default {
             field: col.field,
             editable: col.editable !== undefined ? col.editable === true : true,
             cellRendererFramework:
-              col.cellRendererFramework && DropdownCellEditor,
+            col.cellRendererFramework && DropdownCellEditor,
             choices: col.choices,
           });
         }

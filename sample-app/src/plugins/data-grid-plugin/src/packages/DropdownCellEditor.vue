@@ -39,17 +39,7 @@ export default Vue.extend({
 </script> 
  
 <style>
-.my-dropdown-toggle {
-  border-radius: 5px;
-}
-
-.my-dropdown-toggle::v-deep .dropdown-toggle {
-  color: tomato;
-  font-size: 25px;
-  font-weight: 800;
-}
-
-.my-dropdown-toggle::v-deep .dropdown-toggle-placeholder {
-  color: #c4c4c4;
+.v-input {
+  padding-top: 0px !important;
 }
 </style> 
