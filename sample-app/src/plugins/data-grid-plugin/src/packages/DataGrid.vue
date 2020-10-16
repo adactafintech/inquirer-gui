@@ -57,9 +57,7 @@ export default {
     },
 
     async initGrid() {
-      this.gridOptions = {
-
-      };
+      this.gridOptions = {};
       this.gridContext = { componentParent: this };
       this.frameworkComponents = {
         dataGridButtons: DataGridButtons,
@@ -69,7 +67,6 @@ export default {
       this.defaultColDef = {
         flex: 1,
         editable: true,
-        resizable: true,
       };
 
       this.columnDefs = [];
@@ -94,8 +91,7 @@ export default {
             headerName: col.header,
             field: col.field,
             editable: col.editable !== undefined ? col.editable === true : true,
-            cellRendererFramework:
-            col.editor && DropdownCellEditor,
+            cellRendererFramework: col.editor && DropdownCellEditor,
             enum: col.enum,
           });
         }
