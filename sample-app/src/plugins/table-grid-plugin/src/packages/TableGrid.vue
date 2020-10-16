@@ -7,7 +7,7 @@
       :columnDefs="columnDefs"
       :rowData="rowData"
       :defaultColDef="defaultColDef"
-      :context="context"
+      :context="gridContext"
       :frameworkComponents="frameworkComponents"
       @grid-ready="onGridReady"
       @cell-value-changed = "handleCellValueChanged"
@@ -23,9 +23,9 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { AgGridVue } from "ag-grid-vue";
-import Buttons from "./Buttons";
+import TableGridButtons from "./TableGridButtons";
 export default {
-  name: "Grid",
+  name: "TableGrid",
   props: {
     question: Object,
   },
@@ -48,14 +48,13 @@ export default {
   methods: {
     onGridReady(params) {
       this.gridApi = params.api;
-      // this.gridApi.cellValueChanged = this.handleCellValueChanged;
       this.columnApi = params.columnApi;
     },
 
     initGrid() {
-      this.context = { componentParent: this };
+      this.gridContext = { componentParent: this };
       this.frameworkComponents = {
-        buttons: Buttons,
+        tableGridButtons: TableGridButtons,
       };
 
       this.defaultColDef = {
@@ -82,7 +81,7 @@ export default {
       this.columnDefs.push({
         field: "",
         pinned: "right",
-        cellRendererFramework: Buttons,
+        cellRendererFramework: TableGridButtons,
         width: 50,
         editable: false
       });

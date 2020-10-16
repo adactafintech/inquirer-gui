@@ -40,7 +40,7 @@ import DatePlugin from "../../sample-plugin/src/index";
 import FileBrowserPlugin from "../../file-browser-plugin/src/index";
  */
 
- import GridPlugin from "./plugins/grid-plugin/src/index";
+ import TableGridPlugin from "./plugins/table-grid-plugin/src/index";
 
 export default {
   name: "app",
@@ -122,7 +122,7 @@ export default {
     this.$refs.form.registerPlugin(options.plugin);
 
     options = {};
-    Vue.use(GridPlugin, options);
+    Vue.use(TableGridPlugin, options);
     this.$refs.form.registerPlugin(options.plugin);
 
     options = {};

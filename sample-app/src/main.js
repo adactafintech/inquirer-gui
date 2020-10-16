@@ -66,7 +66,7 @@ const questions1 = [
     name: "packageNames",
     message: "Enter packages", 
     guiOptions: {
-      type: "grid",
+      type: "table-grid",
       hint: "Enter package names",
       columns: [
         {
