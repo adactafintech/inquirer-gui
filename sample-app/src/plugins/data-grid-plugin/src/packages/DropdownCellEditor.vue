@@ -42,4 +42,7 @@ export default Vue.extend({
 .v-input {
   padding-top: 0px !important;
 }
+.v-select__selection{
+  padding-left: 5px;
+}
 </style> 
