@@ -41,8 +41,10 @@ export default {
 
   beforeMount() {
     this.initGrid();
+  },
 
-    this.rowData = [];
+  mounted: function() {
+    this.rowData = this.question.answer || [];
   },
 
   methods: {
