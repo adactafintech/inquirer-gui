@@ -7,6 +7,8 @@
       :columnDefs="columnDefs"
       :rowData="rowData"
       :defaultColDef="defaultColDef"
+      :context="context"
+      :frameworkComponents="frameworkComponents"
       @grid-ready="onGridReady"
     >
     </ag-grid-vue>
@@ -35,18 +37,25 @@ export default {
   components: {
     AgGridVue,
   },
+
   beforeMount() {
-    this.createGridColumns();
+    this.initGrid();
 
     this.rowData = [];
   },
+
   methods: {
     onGridReady(params) {
       this.gridApi = params.api;
       this.columnApi = params.columnApi;
     },
 
-    createGridColumns() {
+    initGrid() {
+      this.context = { componentParent: this };
+      this.frameworkComponents = {
+        buttons: Buttons,
+      };
+
       this.defaultColDef = {
         flex: 1,
         editable: true,
@@ -72,12 +81,21 @@ export default {
         field: "",
         pinned: "right",
         cellRendererFramework: Buttons,
-        width: 75,
+        width: 50,
       });
     },
 
     addNewRow() {
       this.gridApi.applyTransaction({ add: [this.createNewRowData()] });
+      this.answerChanged();
+    },
+
+    deleteSelectedRow(selectedData) {
+      this.gridApi.applyTransaction({ remove: selectedData });
+      this.answerChanged();
+    },
+
+    answerChanged() {
       let items = [];
       this.gridApi.forEachNode(function (node) {
         items.push(node.data);

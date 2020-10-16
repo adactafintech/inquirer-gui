@@ -1,9 +1,8 @@
 <template>
   <div>
-    {{ params.value }}
-    <v-btn class="trash-button" @click="deleteRow()"
+    <span class="trash-button" @click="deleteRow()"
       ><font-awesome-icon icon="trash"
-    /></v-btn>
+    /></span>
   </div>
 </template>
 
@@ -18,11 +17,12 @@ library.add(faTrash);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 export default Vue.extend({
-  data: () => {
-    return {
-      columnDefs: null,
-      rowData: null,
-    };
+  methods: {
+    deleteRow() {
+      this.params.context.componentParent.deleteSelectedRow([
+        this.params.node.data,
+      ]);
+    },
   },
 });
 </script>
@@ -30,5 +30,9 @@ export default Vue.extend({
 .trash-button {
   width: 20px !important;
   min-width: 20px !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  position: absolute !important;
+  right: 12px !important;
 }
 </style>
