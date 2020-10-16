@@ -12,7 +12,7 @@ const WORKFLOW_IMAGE = require("./workflowImage").default;
 
 function sleep (fn, par) {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(fn(par)), 5000);
+    setTimeout(() => resolve(fn(par)), 0);
   })
 }
 
@@ -71,6 +71,11 @@ const questions1 = [
     type: "input",
     name: "packageNames",
     message: "Enter packages",
+    default: [
+      {
+        name: "ttt",
+      }
+    ],
     guiOptions: {
       type: "data-grid",
       hint: "Enter package names",

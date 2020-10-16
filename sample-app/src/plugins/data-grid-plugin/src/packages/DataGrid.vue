@@ -9,6 +9,8 @@
       :defaultColDef="defaultColDef"
       :context="gridContext"
       :frameworkComponents="frameworkComponents"
+      :gridOptions="gridOptions"
+      :singleClickEdit="true"
       @grid-ready="onGridReady"
       @cell-value-changed="handleCellValueChanged"
     >
@@ -31,6 +33,7 @@ export default {
   },
   data: () => {
     return {
+      gridOptions: null,
       columnDefs: null,
       rowData: null,
     };
@@ -54,6 +57,9 @@ export default {
     },
 
     async initGrid() {
+      this.gridOptions = {
+
+      };
       this.gridContext = { componentParent: this };
       this.frameworkComponents = {
         dataGridButtons: DataGridButtons,
