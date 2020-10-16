@@ -10,6 +10,10 @@
         <div>
           <v-btn
             :disabled="this.issues !== undefined"
+            @click="onPrev"
+          >Prev</v-btn>
+          <v-btn
+            :disabled="this.issues !== undefined"
             @click="onNext"
           >Next</v-btn>
         </div>
@@ -63,6 +67,9 @@ export default {
     },
     onNext() {
       main.$emit("next");
+    },
+    onPrev() {
+      main.$emit("prev");
     },
     isInVsCode() {
       return typeof acquireVsCodeApi !== "undefined";

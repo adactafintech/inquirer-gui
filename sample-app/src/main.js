@@ -10,9 +10,15 @@ import Form from "@sap-devx/inquirer-gui";
 const SAP_IMAGE = require("./sapImage").default;
 const WORKFLOW_IMAGE = require("./workflowImage").default;
 
+function sleep (fn, par) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(fn(par)), 5000);
+  })
+}
+
 const questions0 = [
   {
-    name: "appType", 
+    name: "appType",
     message: "",
     type: "list",
     guiOptions: {
@@ -20,12 +26,12 @@ const questions0 = [
     },
     choices: [
       { value: "listReport", name: "List Report", description: "A List report is similar to a table report with rows and columns of data. Each row is one record and each column is a Field. This type of report is often used when you want to see more number of records at a time. It is a simple yet powerful report type that can display any columns you want and in the required order.", homepage: "http://www.sap.com", image: SAP_IMAGE },
-      { value: "masterDetail", name: "Master-Detail Application", description: "Create an SAP HANA data model " , homepage: "http://www.sap.com", image: WORKFLOW_IMAGE}
+      { value: "masterDetail", name: "Master-Detail Application", description: "Create an SAP HANA data model ", homepage: "http://www.sap.com", image: WORKFLOW_IMAGE }
     ],
     default: "masterDetail"
   }
 ];
-  
+
 const questions1 = [
   {
     name: "noType",
@@ -57,14 +63,14 @@ const questions1 = [
     message: "Config file (vscode)",
     default: "/home/",
     getFilePath: async function (currentPath) {
-        return `${currentPath}subdir/`;
+      return `${currentPath}subdir/`;
     }
   },
 
   {
     type: "input",
     name: "packageNames",
-    message: "Enter packages", 
+    message: "Enter packages",
     guiOptions: {
       type: "data-grid",
       hint: "Enter package names",
@@ -74,6 +80,17 @@ const questions1 = [
           field: "name",
           editable: true,
           dataType: "string",
+        },
+        {
+          header: "Dynamic data",
+          field: "dynamicField",
+          dataType: "string",
+          // function to get dynamic data, can be used to provide code tables etc.
+          dataProvider: async function (...params) {
+            return await sleep((params) => {
+              return ['a', 'b', 'c', 'd'];
+            });
+          }
         },
         {
           header: "Test",
@@ -89,36 +106,36 @@ const questions1 = [
         }
       ]
     },
+  },
 
+  {
+    type: "input",
+    name: "name",
+    guiOptions: {
+      hint: "A personal name or full name is the set of names by which an individual is known and that can be recited as a word-group, with the understanding that, taken together, they all relate to that one individual."
+    },
+    message: "Your name (frontend)",
+    default: "Joe",
+    validate: function (input) {
+      if (input.length >= 2) {
+        return true;
+      } else {
+        return "Must be at least 2 characters long";
+      }
+    }
   },
   {
-      type: "input",
-      name: "name",
-      guiOptions: {
-        hint: "A personal name or full name is the set of names by which an individual is known and that can be recited as a word-group, with the understanding that, taken together, they all relate to that one individual."
-      },
-      message: "Your name (frontend)",
-      default: "Joe",
-      validate: function (input) {
-          if (input.length >= 2) {
-              return true;
-          } else {
-              return "Must be at least 2 characters long";
-          }
-      }
-  },
-  {
-      type: "input",
-      name: "notes",
-      message: function (answers) {
-          return `Information about ${answers.name}`;
-      },
-      default: function (answers) {
-        return `Information about ${answers.name}`;
-      },
-      filter: function (input) {
-          return `${input}!!!`
-      }
+    type: "input",
+    name: "notes",
+    message: function (answers) {
+      return `Information about ${answers.name}`;
+    },
+    default: function (answers) {
+      return `Information about ${answers.name}`;
+    },
+    filter: function (input) {
+      return `${input}!!!`
+    }
   },
   {
     type: "input",
@@ -127,66 +144,66 @@ const questions1 = [
     },
     name: "applyDefaultWhenDirty",
     message: function (answers) {
-        return `Information about ${answers.name}`;
+      return `Information about ${answers.name}`;
     },
     default: function (answers) {
       return `Information about ${answers.name}`;
     },
     filter: function (input) {
-        return `${input}!!!`
+      return `${input}!!!`
     }
-},
-{
-      type: "password",
-      name: "password",
-      message: "A password"
   },
   {
-      type: "number",
-      name: "number",
-      message: "A number",
-      default: "0"
+    type: "password",
+    name: "password",
+    message: "A password"
   },
   {
-      type: "input",
-      name: "street address",
-      message: "Your address",
-      default: "1 Main street",
-      when: function (answers) {
-          return answers.name !== "Joker";
-      },
-      validate: function(answer, answers) {
-        return (answer.length < 2 ? "Must enter at least 2 characters" : true);
-      }
+    type: "number",
+    name: "number",
+    message: "A number",
+    default: "0"
   },
   {
-      type: "list",
-      name: "country",
-      message: "The country where you live",
-      choices: [
-        {type: 'separator', line: '──────────────'},
-        "USA",
-        {name:"Germany"},
-        {type: 'separator', line: '\u001b[2m──────────────\u001b[22m'},
-        "China",
-        {type: 'separator', line: '\u001b[2mCustom Separator\u001b[22m'},
-        "Israel"
-      ],
-      default: "Germany"
+    type: "input",
+    name: "street address",
+    message: "Your address",
+    default: "1 Main street",
+    when: function (answers) {
+      return answers.name !== "Joker";
+    },
+    validate: function (answer, answers) {
+      return (answer.length < 2 ? "Must enter at least 2 characters" : true);
+    }
   },
   {
-      type: "checkbox",
-      name: "citizenship",
-      message: "Your citizenship",
-      choices: ["USA", {name:"Germany", value:"Germany"}, "China", "Israel"],
-      default: ["Germany", "USA"]
+    type: "list",
+    name: "country",
+    message: "The country where you live",
+    choices: [
+      { type: 'separator', line: '──────────────' },
+      "USA",
+      { name: "Germany" },
+      { type: 'separator', line: '\u001b[2m──────────────\u001b[22m' },
+      "China",
+      { type: 'separator', line: '\u001b[2mCustom Separator\u001b[22m' },
+      "Israel"
+    ],
+    default: "Germany"
   },
   {
-      type: "expand",
-      name: "agree",
-      message: "Do you agree to the conditions?",
-      choices: ["Yes", "No", "Maybe"],
-      default: "No"
+    type: "checkbox",
+    name: "citizenship",
+    message: "Your citizenship",
+    choices: ["USA", { name: "Germany", value: "Germany" }, "China", "Israel"],
+    default: ["Germany", "USA"]
+  },
+  {
+    type: "expand",
+    name: "agree",
+    message: "Do you agree to the conditions?",
+    choices: ["Yes", "No", "Maybe"],
+    default: "No"
   }
 ];
 
@@ -243,16 +260,16 @@ const questions2 = [
       "Israel"
     ],
     default: ["Germany"],
-    validate: function(input, answers) {
+    validate: function (input, answers) {
       return (input.length === 0 ? "Must choose at least one country" : true)
     }
-   },
+  },
   {
     type: "expand",
     name: "agree",
     message: "Do you agree to the conditions?",
-    choices: ["Yes", "No", {type: "separator"}, "Maybe"],
-    validate: function(input, answers) {
+    choices: ["Yes", "No", { type: "separator" }, "Maybe"],
+    validate: function (input, answers) {
       return (input ? true : "Must choose an answer");
     }
   },
@@ -310,10 +327,17 @@ if (options.vuetify) {
 
 export default new Vue(
   vueOptions
-).$on('next', function () {
-  if (this.questionsIndex < questionsArray.length-1) {
-    this.questionsIndex++;
-    this.prompt(questionsArray[this.questionsIndex]);
-  }
-}
-).$mount('#app');
+)
+  .$on('next', function () {
+    if (this.questionsIndex < questionsArray.length - 1) {
+      this.questionsIndex++;
+      this.prompt(questionsArray[this.questionsIndex]);
+    }
+  })
+  .$on('prev', function () {
+    if (this.questionsIndex > 0) {
+      this.questionsIndex--;
+      this.prompt(questionsArray[this.questionsIndex]);
+    }
+  })
+  .$mount('#app');
