@@ -7,6 +7,8 @@
       :columnDefs="columnDefs"
       :rowData="rowData"
       :defaultColDef="defaultColDef"
+      :context="context"
+      :frameworkComponents="frameworkComponents"
       @grid-ready="onGridReady"
     >
     </ag-grid-vue>
@@ -41,6 +43,10 @@ export default {
       editable: true,
       resizable: true,
     };
+    this.context = { componentParent: this };
+    this.frameworkComponents = {
+      buttons: Buttons,
+    };
     this.columnDefs = [
       { headerName: "Make", field: "make" },
       { headerName: "Model", field: "model" },
@@ -48,8 +54,8 @@ export default {
       {
         field: "",
         pinned: "right",
-        cellRendererFramework: Buttons,
-        width: 75,
+        cellRenderer: "buttons",
+        width: 50,
       },
     ];
 
@@ -66,6 +72,13 @@ export default {
     },
     addNewRow() {
       this.gridApi.applyTransaction({ add: [this.createNewRowData()] });
+      this.answerChanged();
+    },
+    deleteSelectedRow(selectedData) {
+      this.gridApi.applyTransaction({ remove: selectedData });
+      this.answerChanged();
+    },
+    answerChanged() {
       let items = [];
       this.gridApi.forEachNode(function (node) {
         items.push(node.data);
@@ -74,8 +87,8 @@ export default {
     },
     createNewRowData() {
       return {
-        make: "Test",
-        model: "Test",
+        make: "",
+        model: "",
         price: undefined,
       };
     },
