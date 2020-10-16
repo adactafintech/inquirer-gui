@@ -36,34 +36,46 @@ export default {
     AgGridVue,
   },
   beforeMount() {
-    this.defaultColDef = {
-      flex: 1,
-      editable: true,
-      resizable: true,
-    };
-    this.columnDefs = [
-      { headerName: "Make", field: "make" },
-      { headerName: "Model", field: "model" },
-      { headerName: "Price", field: "price" },
-      {
-        field: "",
-        pinned: "right",
-        cellRendererFramework: Buttons,
-        width: 75,
-      },
-    ];
+    this.createGridColumns();
 
-    this.rowData = [
-      { make: "Toyota", model: "Celica", price: 35000 },
-      { make: "Ford", model: "Mondeo", price: 32000 },
-      { make: "Porsche", model: "Boxter", price: 72000 },
-    ];
+    this.rowData = [];
   },
   methods: {
     onGridReady(params) {
       this.gridApi = params.api;
       this.columnApi = params.columnApi;
     },
+
+    createGridColumns() {
+      this.defaultColDef = {
+        flex: 1,
+        editable: true,
+        resizable: true,
+      };
+
+      this.columnDefs = [];
+      if (
+        this.question.guiOptions &&
+        this.question.guiOptions.columns &&
+        Array.isArray(this.question.guiOptions.columns)
+      ) {
+        this.columnDefs = this.question.guiOptions.columns.map((col) => {
+          return {
+            headerName: col.header,
+            field: col.field,
+            editable: col.editable !== undefined ? col.editable === true : true,
+          };
+        });
+      }
+
+      this.columnDefs.push({
+        field: "",
+        pinned: "right",
+        cellRendererFramework: Buttons,
+        width: 75,
+      });
+    },
+
     addNewRow() {
       this.gridApi.applyTransaction({ add: [this.createNewRowData()] });
       let items = [];
@@ -72,12 +84,9 @@ export default {
       });
       this.$emit("answerChanged", this.question.name, items);
     },
+
     createNewRowData() {
-      return {
-        make: "Test",
-        model: "Test",
-        price: undefined,
-      };
+      return {};
     },
   },
 };

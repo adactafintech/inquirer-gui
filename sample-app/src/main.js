@@ -62,10 +62,29 @@ const questions1 = [
   },
 
   {
-    type: "grid",
-    name: "grid",
-    message: "Grid"
-},
+    type: "input",
+    name: "packageNames",
+    message: "Enter packages", 
+    guiOptions: {
+      type: "grid",
+      hint: "Enter package names",
+      columns: [
+        {
+          header: "Package Name",
+          field: "name",
+          editable: true,
+          dataType: "string",
+        },
+        {
+          header: "Test",
+          field: "test",
+          editable: false,
+          dataType: "boolean"
+        }
+      ]
+    },
+
+  },
   {
       type: "input",
       name: "name",
