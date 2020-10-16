@@ -10,6 +10,7 @@
       :context="context"
       :frameworkComponents="frameworkComponents"
       @grid-ready="onGridReady"
+      @cell-value-changed = "handleCellValueChanged"
     >
     </ag-grid-vue>
 
@@ -47,6 +48,7 @@ export default {
   methods: {
     onGridReady(params) {
       this.gridApi = params.api;
+      // this.gridApi.cellValueChanged = this.handleCellValueChanged;
       this.columnApi = params.columnApi;
     },
 
@@ -82,7 +84,12 @@ export default {
         pinned: "right",
         cellRendererFramework: Buttons,
         width: 50,
+        editable: false
       });
+    },
+
+    handleCellValueChanged() {
+      this.answerChanged();
     },
 
     addNewRow() {
