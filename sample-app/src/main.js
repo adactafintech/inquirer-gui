@@ -10,6 +10,12 @@ import Form from "@sap-devx/inquirer-gui";
 const SAP_IMAGE = require("./sapImage").default;
 const WORKFLOW_IMAGE = require("./workflowImage").default;
 
+function sleep (fn, par) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(fn(par)), 5000);
+  })
+}
+
 const questions0 = [
   {
     name: "appType",
@@ -76,6 +82,17 @@ const questions1 = [
           dataType: "string",
         },
         {
+          header: "Dynamic data",
+          field: "dynamicField",
+          dataType: "string",
+          // function to get dynamic data, can be used to provide code tables etc.
+          dataProvider: async function (...params) {
+            return await sleep((params) => {
+              return ['a', 'b', 'c', 'd'];
+            });
+          }
+        },
+        {
           header: "Test",
           field: "test",
           editable: false,
@@ -83,8 +100,8 @@ const questions1 = [
         }
       ]
     },
-
   },
+
   {
     type: "input",
     name: "name",

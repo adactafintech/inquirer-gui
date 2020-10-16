@@ -10,7 +10,7 @@
       :context="gridContext"
       :frameworkComponents="frameworkComponents"
       @grid-ready="onGridReady"
-      @cell-value-changed = "handleCellValueChanged"
+      @cell-value-changed="handleCellValueChanged"
     >
     </ag-grid-vue>
 
@@ -43,7 +43,7 @@ export default {
     this.initGrid();
   },
 
-  mounted: function() {
+  mounted: function () {
     this.rowData = this.question.answer || [];
   },
 
@@ -53,7 +53,7 @@ export default {
       this.columnApi = params.columnApi;
     },
 
-    initGrid() {
+    async initGrid() {
       this.gridContext = { componentParent: this };
       this.frameworkComponents = {
         dataGridButtons: DataGridButtons,
@@ -71,13 +71,30 @@ export default {
         this.question.guiOptions.columns &&
         Array.isArray(this.question.guiOptions.columns)
       ) {
-        this.columnDefs = this.question.guiOptions.columns.map((col) => {
-          return {
+        for (let index = 0; index < this.question.guiOptions.columns.length; index++) {
+          const col = this.question.guiOptions.columns[index];
+        
+          if (col.dataProvider) {
+            const dynData = await col.dataProvider(col, this.question);
+            console.log(dynData);
+            // this.$emit(
+            //   "customEvent",
+            //   this.question.name,
+            //   col.dataProvider,
+            //   (data) => {
+            //     console.log(data);
+            //   },
+            //   this.question.answer,
+            //   col
+            // );
+          }
+
+          this.columnDefs.push({
             headerName: col.header,
             field: col.field,
             editable: col.editable !== undefined ? col.editable === true : true,
-          };
-        });
+          });
+        };
       }
 
       this.columnDefs.push({
@@ -85,7 +102,7 @@ export default {
         pinned: "right",
         cellRendererFramework: DataGridButtons,
         width: 50,
-        editable: false
+        editable: false,
       });
     },
 
