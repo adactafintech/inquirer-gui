@@ -39,14 +39,14 @@ const questions1 = [
     name: "login",
     message: "Login",
     default: "",
-    validate: async function (answer, answers) {
-      if (!answer) {
-        return "Must enter password"
-      } else {
-        // perform login
-        return true;
-      }
-    }
+    // validate: async function (answer, answers) {
+    //   if (!answer) {
+    //     return "Must enter password"
+    //   } else {
+    //     // perform login
+    //     return true;
+    //   }
+    // }
   },
   {
     type: "input",
@@ -59,11 +59,6 @@ const questions1 = [
     getFilePath: async function (currentPath) {
         return `${currentPath}subdir/`;
     }
-  },
-  {
-      type: "date",
-      name: "birthday",
-      message: "Birthday"
   },
 
   {

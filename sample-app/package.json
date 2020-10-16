@@ -13,6 +13,13 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@ag-grid-community/all-modules": "^24.1.0",
+    "@ag-grid-community/client-side-row-model": "^24.1.0",
+    "@ag-grid-community/core": "^24.1.0",
+    "@ag-grid-community/vue": "^24.1.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/vue-fontawesome": "^2.0.0",
     "@mdi/font": "^4.9.95",
     "@sap-devx/inquirer-gui": "0.1.19",
     "@sap-devx/inquirer-gui-date-plugin": "0.0.2",
@@ -20,19 +27,15 @@
     "@sap-devx/inquirer-gui-login-plugin": "0.0.4",
     "@sap-devx/inquirer-gui-tiles-plugin": "0.0.8",
     "@sap-devx/webview-rpc": "^0.2.0",
-    "material-design-icons-iconfont": "^5.0.1",
-    "vue": "^2.6.10",
-    "vuetify": "^2.2.11",
-    "@ag-grid-community/all-modules": "^24.1.0",
-    "@ag-grid-community/client-side-row-model": "^24.1.0",
-    "@ag-grid-community/core": "^24.1.0",
-    "@ag-grid-community/vue": "^24.1.0",
     "@vue/reactivity": "^3.0.0",
     "ag-grid": "^18.1.2",
     "ag-grid-community": "^24.1.0",
     "ag-grid-vue": "^24.1.0",
+    "material-design-icons-iconfont": "^5.0.1",
+    "vue": "^2.6.10",
     "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.0.2"
+    "vue-property-decorator": "^9.0.2",
+    "vuetify": "^2.2.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.11.0",
