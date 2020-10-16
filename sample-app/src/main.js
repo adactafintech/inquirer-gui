@@ -102,6 +102,12 @@ const questions1 = [
           field: "test",
           editable: false,
           dataType: "boolean"
+        },
+        {
+          header: "Dropdown",
+          field: "dropdown",
+          cellRendererFramework: 'DropdownCellEditor',
+          choices: ["Yes", "No", "Maybe"],
         }
       ]
     },

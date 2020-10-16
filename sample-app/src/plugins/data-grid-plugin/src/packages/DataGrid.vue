@@ -11,6 +11,7 @@
       :frameworkComponents="frameworkComponents"
       :gridOptions="gridOptions"
       :singleClickEdit="true"
+      :components="frameworkComponents"
       @grid-ready="onGridReady"
       @cell-value-changed="handleCellValueChanged"
     >
@@ -26,6 +27,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { AgGridVue } from "ag-grid-vue";
 import DataGridButtons from "./DataGridButtons";
+import DropdownCellEditor from "./DropdownCellEditor";
 export default {
   name: "DataGrid",
   props: {
@@ -63,6 +65,7 @@ export default {
       this.gridContext = { componentParent: this };
       this.frameworkComponents = {
         dataGridButtons: DataGridButtons,
+        dropdownCellEditor: DropdownCellEditor,
       };
 
       this.defaultColDef = {
@@ -77,30 +80,27 @@ export default {
         this.question.guiOptions.columns &&
         Array.isArray(this.question.guiOptions.columns)
       ) {
-        for (let index = 0; index < this.question.guiOptions.columns.length; index++) {
+        for (
+          let index = 0;
+          index < this.question.guiOptions.columns.length;
+          index++
+        ) {
           const col = this.question.guiOptions.columns[index];
-        
+
           if (col.dataProvider) {
             const dynData = await col.dataProvider(col, this.question);
             console.log(dynData);
-            // this.$emit(
-            //   "customEvent",
-            //   this.question.name,
-            //   col.dataProvider,
-            //   (data) => {
-            //     console.log(data);
-            //   },
-            //   this.question.answer,
-            //   col
-            // );
           }
 
           this.columnDefs.push({
             headerName: col.header,
             field: col.field,
             editable: col.editable !== undefined ? col.editable === true : true,
+            cellRendererFramework:
+              col.cellRendererFramework && DropdownCellEditor,
+            choices: col.choices,
           });
-        };
+        }
       }
 
       this.columnDefs.push({
@@ -126,6 +126,10 @@ export default {
       this.answerChanged();
     },
 
+    updateSelectedRow(selectedData) {
+      this.gridApi.applyTransaction({ update: selectedData });
+      this.answerChanged();
+    },
     answerChanged() {
       let items = [];
       this.gridApi.forEachNode(function (node) {
