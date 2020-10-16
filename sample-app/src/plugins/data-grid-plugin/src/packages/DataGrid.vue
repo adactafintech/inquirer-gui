@@ -8,9 +8,9 @@
       :rowData="rowData"
       :defaultColDef="defaultColDef"
       :context="gridContext"
-      :frameworkComponents="frameworkComponents"
+      :components="frameworkComponents"
       @grid-ready="onGridReady"
-      @cell-value-changed = "handleCellValueChanged"
+      @cell-value-changed="handleCellValueChanged"
     >
     </ag-grid-vue>
 
@@ -24,6 +24,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { AgGridVue } from "ag-grid-vue";
 import DataGridButtons from "./DataGridButtons";
+import DropdownCellEditor from "./DropdownCellEditor";
 export default {
   name: "DataGrid",
   props: {
@@ -55,6 +56,7 @@ export default {
       this.gridContext = { componentParent: this };
       this.frameworkComponents = {
         dataGridButtons: DataGridButtons,
+        dropdownCellEditor: DropdownCellEditor,
       };
 
       this.defaultColDef = {
@@ -74,6 +76,9 @@ export default {
             headerName: col.header,
             field: col.field,
             editable: col.editable !== undefined ? col.editable === true : true,
+            cellRendererFramework:
+              col.cellRendererFramework && DropdownCellEditor,
+            choices: col.choices,
           };
         });
       }
@@ -83,7 +88,7 @@ export default {
         pinned: "right",
         cellRendererFramework: DataGridButtons,
         width: 50,
-        editable: false
+        editable: false,
       });
     },
 
@@ -101,6 +106,10 @@ export default {
       this.answerChanged();
     },
 
+    updateSelectedRow(selectedData) {
+      this.gridApi.applyTransaction({ update: selectedData });
+      this.answerChanged();
+    },
     answerChanged() {
       let items = [];
       this.gridApi.forEachNode(function (node) {
