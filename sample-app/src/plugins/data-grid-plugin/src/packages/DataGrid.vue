@@ -95,8 +95,8 @@ export default {
             field: col.field,
             editable: col.editable !== undefined ? col.editable === true : true,
             cellRendererFramework:
-            col.cellRendererFramework && DropdownCellEditor,
-            choices: col.choices,
+            col.editor && DropdownCellEditor,
+            enum: col.enum,
           });
         }
       }

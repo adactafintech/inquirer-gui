@@ -106,8 +106,8 @@ const questions1 = [
         {
           header: "Dropdown",
           field: "dropdown",
-          cellRendererFramework: 'DropdownCellEditor',
-          choices: ["Yes", "No", "Maybe"],
+          editor: 'DropdownCellEditor',
+          enum: ["Yes", "No", "Maybe"],
         }
       ]
     },

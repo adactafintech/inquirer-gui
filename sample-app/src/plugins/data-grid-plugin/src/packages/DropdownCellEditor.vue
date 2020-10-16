@@ -21,7 +21,7 @@ export default Vue.extend({
   },
 
   beforeMount() {
-    this.items = this.params.colDef.choices;
+    this.items = this.params.colDef.enum ? this.params.colDef.enum : [];
     this.select = this.params.node.data[this.params.colDef.field]
       ? this.params.node.data[this.params.colDef.field]
       : this.items[0];
