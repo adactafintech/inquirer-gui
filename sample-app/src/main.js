@@ -71,11 +71,20 @@ const questions1 = [
     type: "input",
     name: "packageNames",
     message: "Enter packages",
+    store: true,
     default: [
       {
-        name: "ttt",
+        name: "default adinsure",
       }
     ],
+    validate: (value, answers) => {
+      return value.length > 0;
+    },
+    dynamicData: async (...params) => {
+      return await sleep((params) => {
+        return ['a', 'b', 'c', 'd'];
+      })
+    },
     guiOptions: {
       type: "data-grid",
       hint: "Enter package names",
@@ -90,12 +99,7 @@ const questions1 = [
           header: "Dynamic data",
           field: "dynamicField",
           dataType: "string",
-          // function to get dynamic data, can be used to provide code tables etc.
-          enum: async function (...params) {
-            return await sleep((params) => {
-              return ['a', 'b', 'c', 'd'];
-            });
-          }
+          enumProvider: 'dynamicData'
         },
         {
           header: "Test",
@@ -106,7 +110,6 @@ const questions1 = [
         {
           header: "Dropdown",
           field: "dropdown",
-          editable: false,
           enum: ["Yes", "No", "Maybe"],
         }
       ]

@@ -22,7 +22,7 @@
 <script>
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+// import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 import { AgGridVue } from "ag-grid-vue";
 import DataGridButtons from "./DataGridButtons";
 import DropdownCellEditor from "./DropdownCellEditor";
@@ -83,8 +83,8 @@ export default {
           const col = this.question.guiOptions.columns[index];
 
           let enumValue = col.enum;
-          if (col.enum && typeof col.enum === 'function') {
-            const dynData = await col.enum(col, this.question);
+          if (col.enumProvider && typeof this.question[col.enumProvider] === 'function') {
+            const dynData = await this.question[col.enumProvider](col, this.question);
             // console.log(dynData);
             enumValue = dynData;
           }
