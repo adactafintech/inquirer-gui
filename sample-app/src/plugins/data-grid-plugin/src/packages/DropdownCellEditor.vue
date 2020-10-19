@@ -5,6 +5,7 @@
       :items="items"
       v-model="select"
       v-on:input="changeRoute(`${select}`)"
+      dense
     ></v-select>
   </div>
 </template>
@@ -39,8 +40,12 @@ export default Vue.extend({
 </script> 
  
 <style>
-.v-input {
+.v-select.v-input {
   padding-top: 0px !important;
+}
+
+.v-select.v-input div.v-input__control{
+  background-color: transparent !important;
 }
 .v-select__selection{
   padding-left: 5px;
