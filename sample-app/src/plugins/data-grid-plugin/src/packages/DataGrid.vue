@@ -2,7 +2,7 @@
 <template>
   <div>
     <ag-grid-vue
-      style="width: 500px; height: 300px"
+      style="height: 300px"
       class="ag-theme-alpine"
       :columnDefs="columnDefs"
       :rowData="rowData"
