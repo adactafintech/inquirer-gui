@@ -93,7 +93,7 @@ export default {
             headerName: col.header,
             field: col.field,
             editable: col.editable !== undefined ? col.editable === true : true,
-            cellRendererFramework: col.editor && DropdownCellEditor,
+            cellRendererFramework: enumValue ? DropdownCellEditor : undefined,
             enum: enumValue,
           });
         }
