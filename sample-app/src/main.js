@@ -91,7 +91,7 @@ const questions1 = [
           field: "dynamicField",
           dataType: "string",
           // function to get dynamic data, can be used to provide code tables etc.
-          dataProvider: async function (...params) {
+          enum: async function (...params) {
             return await sleep((params) => {
               return ['a', 'b', 'c', 'd'];
             });

@@ -82,9 +82,11 @@ export default {
         ) {
           const col = this.question.guiOptions.columns[index];
 
-          if (col.dataProvider) {
-            const dynData = await col.dataProvider(col, this.question);
-            console.log(dynData);
+          let enumValue = col.enum;
+          if (col.enum && typeof col.enum === 'function') {
+            const dynData = await col.enum(col, this.question);
+            // console.log(dynData);
+            enumValue = dynData;
           }
 
           this.columnDefs.push({
@@ -92,7 +94,7 @@ export default {
             field: col.field,
             editable: col.editable !== undefined ? col.editable === true : true,
             cellRendererFramework: col.editor && DropdownCellEditor,
-            enum: col.enum,
+            enum: enumValue,
           });
         }
       }
