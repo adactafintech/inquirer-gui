@@ -31,7 +31,7 @@
         :key="'validation-' + index"
       >{{question.validationMessage}}</div>
     </template>
-	<v-text-field id="form-single-input-issue-key-enter-workaround" style="display:none;"/>
+  <v-text-field id="form-single-input-issue-key-enter-workaround" style="display:none;"/>
   </v-form>
 </template>
 
@@ -55,8 +55,8 @@ export default {
   },
   methods: {
     shouldShowValidationMessage(question) {
-	return question.shouldShow && !question.isValid && 
-		((question.__origAnswer !== undefined) || !(question.guiOptions && question.guiOptions.hint && !question.isDirty));
+  return question.shouldShow && !question.isValid && 
+    ((question.__origAnswer !== undefined) || !(question.guiOptions && question.guiOptions.hint && !question.isDirty));
     },
     removeShouldntShows(questions, answers) {
       for (let question of this.questions) {
@@ -103,8 +103,8 @@ export default {
       question.validationMessage = "";
     },
     setIsMandatory(question) {
-	question.isMandatory = ["expand"].includes(question.type) ||
-		((question.guiOptions && question.guiOptions.mandatory === true) && (typeof question.validate === "function"));
+  question.isMandatory = ["expand"].includes(question.type) ||
+  ((question.guiOptions && question.guiOptions.mandatory === true) && (typeof question.validate === "function"));
     },
     getComponentByQuestionType(question) {
       const guiType= question.guiOptions && question.guiOptions.type ? question.guiOptions.type : question.guiType;
@@ -226,12 +226,12 @@ export default {
           if (index < 0) {
             index = question._choices.findIndex(choice => {
               if (question._default) {
-		  try {
-			  assert.deepEqual(choice.value, question._default);
-			  return true;
-		  } catch (error) {
-			  return false;
-		  } 
+      try {
+        assert.deepEqual(choice.value, question._default);
+        return true;
+      } catch (error) {
+        return false;
+      } 
               }
             });
           }
@@ -352,9 +352,9 @@ export default {
               this.console.error(`Could not evaluate when() for ${question.name}`);
             }
           } else if (question.when !== false) {
-	     question.shouldShow = true;
-	     shouldValidate = true;
-	 }
+       question.shouldShow = true;
+       shouldValidate = true;
+   }
 
           if (question.shouldShow) {
             // evaluate message()
@@ -465,25 +465,25 @@ export default {
 
         // default
         if (question.default !== undefined) {
-	   let _default;
-	   if (typeof question.default !== "function") {
-	     if (question.__origAnswer === undefined) {
-		_default = question.default;
-	     } else {
-		_default = question.__origAnswer; 
-	     }
-	   }
-	   this.$set(question, "_default", _default);
-	} else if (question._default === undefined) {
-	   this.$set(question, "_default", question.__origAnswer);
-	}
+     let _default;
+     if (typeof question.default !== "function") {
+       if (question.__origAnswer === undefined) {
+    _default = question.default;
+       } else {
+    _default = question.__origAnswer; 
+       }
+     }
+     this.$set(question, "_default", _default);
+  } else if (question._default === undefined) {
+     this.$set(question, "_default", question.__origAnswer);
+  }
 
         // validity
         this.$set(question, "isValid", true);
         this.$set(question, "validationMessage", "");
-	
-	// mandatory
-	this.setIsMandatory(question);
+  
+  // mandatory
+  this.setIsMandatory(question);
 
         // dirty
         this.$set(question, "isDirty", false);
@@ -540,15 +540,15 @@ export default {
           // evaluate default()
           if (typeof question.default === "function") {
             try {
-		if (question.__origAnswer === undefined) {
-			question._default = await question.default(answers);
-		} else {
-			question._default = question.__origAnswer; 
-		}
-		question.answer = this.getInitialAnswer(question);
+    if (question.__origAnswer === undefined) {
+      question._default = await question.default(answers);
+    } else {
+      question._default = question.__origAnswer; 
+    }
+    question.answer = this.getInitialAnswer(question);
 
-		// optimization: avoid repeatedly calling this.getAnswers()
-		answers[question.name] = question.answer;
+    // optimization: avoid repeatedly calling this.getAnswers()
+    answers[question.name] = question.answer;
             } catch(e) {
               this.console.error(`Could not evaluate default() for ${question.name}`);
             }
