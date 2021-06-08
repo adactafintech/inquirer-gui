@@ -6,13 +6,16 @@
         class="question-label"
         v-if="question.shouldShow"
       >
-        <span class="question-message">{{question._message}}</span>
-        <span class="question-hint" v-if="question.guiOptions && question.guiOptions.hint">
+        <span class="question-message">{{ question._message }}</span>
+        <span
+          class="question-hint"
+          v-if="question.guiOptions && question.guiOptions.hint"
+        >
           <v-tooltip top max-width="350px">
-            <template v-slot:activator="{on}">
+            <template v-slot:activator="{ on }">
               <v-icon v-on="on">mdi-help-circle-outline</v-icon>
             </template>
-            <span>{{question.guiOptions.hint}}</span>
+            <span>{{ question.guiOptions.hint }}</span>
           </v-tooltip>
         </span>
         <span class="mandatory-asterisk" v-if="question.isMandatory">*</span>
@@ -29,34 +32,47 @@
         v-if="shouldShowValidationMessage(question)"
         class="error-validation-text"
         :key="'validation-' + index"
-      >{{question.validationMessage}}</div>
+      >
+        {{ question.validationMessage }}
+      </div>
     </template>
-  <v-text-field id="form-single-input-issue-key-enter-workaround" style="display:none;"/>
+    <v-text-field
+      id="form-single-input-issue-key-enter-workaround"
+      style="display: none"
+    />
   </v-form>
 </template>
 
 <script>
 import Plugins from "./Plugins";
-const assert = require('assert');
+const assert = require("assert");
 
 const NOT_ANSWERED = "Mandatory field";
 export default {
   name: "Form",
   props: {
-    questions: Array
+    questions: Array,
   },
   data() {
     return {
-      plugins: null
+      plugins: null,
     };
   },
   computed: {
-    console: () => console
+    console: () => console,
   },
   methods: {
     shouldShowValidationMessage(question) {
-  return question.shouldShow && !question.isValid && 
-    ((question.__origAnswer !== undefined) || !(question.guiOptions && question.guiOptions.hint && !question.isDirty));
+      return (
+        question.shouldShow &&
+        !question.isValid &&
+        (question.__origAnswer !== undefined ||
+          !(
+            question.guiOptions &&
+            question.guiOptions.hint &&
+            !question.isDirty
+          ))
+      );
     },
     removeShouldntShows(questions, answers) {
       for (let question of this.questions) {
@@ -80,11 +96,15 @@ export default {
               this.setValid(question);
             }
           } else {
-            this.setInvalid(question,
-              typeof response === "string" ? response : "");
+            this.setInvalid(
+              question,
+              typeof response === "string" ? response : ""
+            );
           }
-        } catch(e) {
-          this.console.error(`Could not evaluate validate() for ${question.name}`);
+        } catch (e) {
+          this.console.error(
+            `Could not evaluate validate() for ${question.name}`
+          );
         }
       } else {
         if (question.answer === undefined) {
@@ -103,21 +123,27 @@ export default {
       question.validationMessage = "";
     },
     setIsMandatory(question) {
-  question.isMandatory = ["expand"].includes(question.type) ||
-  ((question.guiOptions && question.guiOptions.mandatory === true) && (typeof question.validate === "function"));
+      question.isMandatory =
+        ["expand"].includes(question.type) ||
+        (question.guiOptions &&
+          question.guiOptions.mandatory === true &&
+          typeof question.validate === "function");
     },
     getComponentByQuestionType(question) {
-      const guiType= question.guiOptions && question.guiOptions.type ? question.guiOptions.type : question.guiType;
+      const guiType =
+        question.guiOptions && question.guiOptions.type
+          ? question.guiOptions.type
+          : question.guiType;
       let foundPlugin;
       if (guiType) {
-        foundPlugin = this.plugins.find(plugin => {
+        foundPlugin = this.plugins.find((plugin) => {
           return plugin.questionType === guiType;
         });
         if (foundPlugin) {
           return foundPlugin.component;
         }
       }
-      foundPlugin = this.plugins.find(plugin => {
+      foundPlugin = this.plugins.find((plugin) => {
         return plugin.questionType === question.type;
       });
       if (foundPlugin) {
@@ -151,15 +177,22 @@ export default {
           someInvalid = true;
         }
       }
-      return (someInvalid ? result : undefined);
+      return someInvalid ? result : undefined;
     },
     normalizeChoices(choices) {
       if (Array.isArray(choices)) {
-        const mappedChoices = choices.map(value => {
-          if (value === undefined || typeof value === "string" || typeof value === "number") {
+        const mappedChoices = choices.map((value) => {
+          if (
+            value === undefined ||
+            typeof value === "string" ||
+            typeof value === "number"
+          ) {
             return { name: value, value: value };
           } else {
-            if (value.hasOwnProperty("name") && !value.hasOwnProperty("value")) {
+            if (
+              value.hasOwnProperty("name") &&
+              !value.hasOwnProperty("value")
+            ) {
               return { name: value.name, value: value.name };
             }
           }
@@ -213,33 +246,58 @@ export default {
       switch (question.type) {
         case "list":
         case "rawlist":
-          if (question._choices.length === 0 || question._default === undefined) {
+          if (
+            question._choices.length === 0 ||
+            question._default === undefined
+          ) {
             this.setInvalid(question, NOT_ANSWERED);
             return;
           }
-          if (typeof question._default === "number") {
-            index = question._default;
-             if (index > question._choices.length - 1) {
-               index = -1;
-             }
-          }
-          if (index < 0) {
-            index = question._choices.findIndex(choice => {
-              if (question._default) {
-      try {
-        assert.deepEqual(choice.value, question._default);
-        return true;
-      } catch (error) {
-        return false;
-      } 
+
+          if (question.multiple === true) {
+            if (!question._default || !Array.isArray(question._default)) {
+              return;
+            }
+
+            const defaultValues = new Set();
+            for (const defaultValueItem of question._default) {
+              for (const choice of question._choices) {
+                try {
+                  assert.deepEqual(choice.value, defaultValueItem);
+                  defaultValues.add(defaultValueItem);
+                } catch (error) {
+                  //
+                }
               }
-            });
-          }
-          if (index < 0 || index > question._choices.length - 1) {
-            this.setInvalid(question, NOT_ANSWERED);
-            return;
+            }
+
+            return [...defaultValues.values()];
+
           } else {
-            return question._choices[index].value;
+            if (typeof question._default === "number") {
+              index = question._default;
+              if (index > question._choices.length - 1) {
+                index = -1;
+              }
+            }
+            if (index < 0) {
+              index = question._choices.findIndex((choice) => {
+                if (question._default) {
+                  try {
+                    assert.deepEqual(choice.value, question._default);
+                    return true;
+                  } catch (error) {
+                    return false;
+                  }
+                }
+              });
+            }
+            if (index < 0 || index > question._choices.length - 1) {
+              this.setInvalid(question, NOT_ANSWERED);
+              return;
+            } else {
+              return question._choices[index].value;
+            }
           }
         case "expand":
           if (question._choices.length === 0) {
@@ -269,7 +327,7 @@ export default {
             // add to answers if choice is in default
             if (Array.isArray(question._default)) {
               let foundIndex = question._default.findIndex(
-                currentDefaultValue => {
+                (currentDefaultValue) => {
                   return choice.value === currentDefaultValue;
                 }
               );
@@ -280,7 +338,11 @@ export default {
             }
 
             // add to answers if choice is marked as checked
-            if (choice.checked === true && !(question.__ForceDefault === true) && !wasPushed) {
+            if (
+              choice.checked === true &&
+              !(question.__ForceDefault === true) &&
+              !wasPushed
+            ) {
               initialAnswersArray.push(choice.value);
             }
           }
@@ -290,7 +352,7 @@ export default {
       }
     },
     async onCustomEvent(questionName, methodName, callback, ...params) {
-      const relevantQuestion = this.questions.find(value => {
+      const relevantQuestion = this.questions.find((value) => {
         return value["name"] === questionName;
       });
 
@@ -300,8 +362,10 @@ export default {
           if (callback) {
             callback(response);
           }
-        } catch(e) {
-          this.console.error(`Could not evaluate ${methodName}() for ${relevantQuestion.name}`);
+        } catch (e) {
+          this.console.error(
+            `Could not evaluate ${methodName}() for ${relevantQuestion.name}`
+          );
         }
       }
     },
@@ -311,7 +375,7 @@ export default {
         // call question methods or emit the answered event
         return;
       }
-      const index = this.questions.findIndex(question => {
+      const index = this.questions.findIndex((question) => {
         return question["name"] === name;
       });
 
@@ -330,7 +394,7 @@ export default {
       const answers = this.getAnswers();
       // evaluate methods for questions following answered question (e.g. when)
       let shouldStart = false;
-      const whenPromises = []; 
+      const whenPromises = [];
       for (let question of this.questions) {
         if (question.name === answeredQuestion.name) {
           shouldStart = true;
@@ -341,20 +405,22 @@ export default {
             try {
               const whenPromise = question.when(answers);
               whenPromises.push(whenPromise);
-              let response = await whenPromise; 
+              let response = await whenPromise;
               // When question was shouldShow === false, and
               //   it becomes shouldShow === true, call validate()
               if (!question.shouldShow && response) {
                 shouldValidate = true;
               }
               question.shouldShow = response;
-            } catch(e) {
-              this.console.error(`Could not evaluate when() for ${question.name}`);
+            } catch (e) {
+              this.console.error(
+                `Could not evaluate when() for ${question.name}`
+              );
             }
           } else if (question.when !== false) {
-       question.shouldShow = true;
-       shouldValidate = true;
-   }
+            question.shouldShow = true;
+            shouldValidate = true;
+          }
 
           if (question.shouldShow) {
             // evaluate message()
@@ -362,8 +428,10 @@ export default {
               try {
                 let response = await question.message(answers);
                 question._message = response;
-              } catch(e) {
-                this.console.error(`Could not evaluate message() for ${question.name}`);
+              } catch (e) {
+                this.console.error(
+                  `Could not evaluate message() for ${question.name}`
+                );
               }
             }
 
@@ -378,22 +446,32 @@ export default {
                   answers[question.name] = question.answer;
                   shouldValidate = true;
                 }
-              } catch(e) {
-                this.console.error(`Could not evaluate choices() for ${question.name}`);
+              } catch (e) {
+                this.console.error(
+                  `Could not evaluate choices() for ${question.name}`
+                );
               }
             }
 
             // evaluate default()
-            const applyDefaultWhenDirty = !question.isDirty || (question.guiOptions && question.guiOptions.applyDefaultWhenDirty);
-            if (typeof question.default === "function" && applyDefaultWhenDirty) {
+            const applyDefaultWhenDirty =
+              !question.isDirty ||
+              (question.guiOptions &&
+                question.guiOptions.applyDefaultWhenDirty);
+            if (
+              typeof question.default === "function" &&
+              applyDefaultWhenDirty
+            ) {
               try {
                 question._default = await question.default(answers);
                 question.answer = this.getInitialAnswer(question);
                 // optimization: avoid repeatedly calling this.getAnswers()
                 answers[question.name] = question.answer;
                 shouldValidate = true;
-              } catch(e) {
-                this.console.error(`Could not evaluate default() for ${question.name}`);
+              } catch (e) {
+                this.console.error(
+                  `Could not evaluate default() for ${question.name}`
+                );
               }
             }
 
@@ -418,8 +496,10 @@ export default {
           try {
             const filteredAnswer = await question.filter(currentAnswer);
             filteredAnswers[question.name] = filteredAnswer;
-          } catch(e) {
-            this.console.error(`Could not evaluate filter() for ${question.name}`);
+          } catch (e) {
+            this.console.error(
+              `Could not evaluate filter() for ${question.name}`
+            );
           }
         }
       }
@@ -427,15 +507,15 @@ export default {
       Promise.all(whenPromises).then(() => {
         this.$emit("whensEvaluated");
       });
-      
+
       const issues = this.getIssues();
       this.removeShouldntShows(this.questions, filteredAnswers);
       // fire 'answered' event
       this.$emit("answered", filteredAnswers, issues);
-    }
+    },
   },
   watch: {
-    questions: async function(newVal, oldVal) {
+    questions: async function (newVal, oldVal) {
       if (newVal === oldVal) {
         return;
       }
@@ -465,25 +545,25 @@ export default {
 
         // default
         if (question.default !== undefined) {
-     let _default;
-     if (typeof question.default !== "function") {
-       if (question.__origAnswer === undefined) {
-    _default = question.default;
-       } else {
-    _default = question.__origAnswer; 
-       }
-     }
-     this.$set(question, "_default", _default);
-  } else if (question._default === undefined) {
-     this.$set(question, "_default", question.__origAnswer);
-  }
+          let _default;
+          if (typeof question.default !== "function") {
+            if (question.__origAnswer === undefined) {
+              _default = question.default;
+            } else {
+              _default = question.__origAnswer;
+            }
+          }
+          this.$set(question, "_default", _default);
+        } else if (question._default === undefined) {
+          this.$set(question, "_default", question.__origAnswer);
+        }
 
         // validity
         this.$set(question, "isValid", true);
         this.$set(question, "validationMessage", "");
-  
-  // mandatory
-  this.setIsMandatory(question);
+
+        // mandatory
+        this.setIsMandatory(question);
 
         // dirty
         this.$set(question, "isDirty", false);
@@ -493,7 +573,10 @@ export default {
         this.$set(question, "answer", answer);
 
         // visibility
-        const shouldShow = (question.when === false || (typeof question.when === "function")) ? false : true;
+        const shouldShow =
+          question.when === false || typeof question.when === "function"
+            ? false
+            : true;
         this.$set(question, "shouldShow", shouldShow);
       }
 
@@ -508,8 +591,10 @@ export default {
             whenPromises.push(whenPromise);
             let response = await whenPromise;
             question.shouldShow = response;
-          } catch(e) {
-            this.console.error(`Could not evaluate when() for ${question.name}`);
+          } catch (e) {
+            this.console.error(
+              `Could not evaluate when() for ${question.name}`
+            );
           }
         }
 
@@ -519,8 +604,10 @@ export default {
             try {
               const response = await question.message(answers);
               question._message = response;
-            } catch(e) {
-              this.console.error(`Could not evaluate message() for ${question.name}`);
+            } catch (e) {
+              this.console.error(
+                `Could not evaluate message() for ${question.name}`
+              );
             }
           }
 
@@ -532,25 +619,29 @@ export default {
               question.answer = this.getInitialAnswer(question);
               // optimization: avoid repeatedly calling this.getAnswers()
               answers[question.name] = question.answer;
-            } catch(e) {
-              this.console.error(`Could not evaluate choices() for ${question.name}`);
+            } catch (e) {
+              this.console.error(
+                `Could not evaluate choices() for ${question.name}`
+              );
             }
           }
 
           // evaluate default()
           if (typeof question.default === "function") {
             try {
-    if (question.__origAnswer === undefined) {
-      question._default = await question.default(answers);
-    } else {
-      question._default = question.__origAnswer; 
-    }
-    question.answer = this.getInitialAnswer(question);
+              if (question.__origAnswer === undefined) {
+                question._default = await question.default(answers);
+              } else {
+                question._default = question.__origAnswer;
+              }
+              question.answer = this.getInitialAnswer(question);
 
-    // optimization: avoid repeatedly calling this.getAnswers()
-    answers[question.name] = question.answer;
-            } catch(e) {
-              this.console.error(`Could not evaluate default() for ${question.name}`);
+              // optimization: avoid repeatedly calling this.getAnswers()
+              answers[question.name] = question.answer;
+            } catch (e) {
+              this.console.error(
+                `Could not evaluate default() for ${question.name}`
+              );
             }
           }
 
@@ -567,11 +658,11 @@ export default {
       this.removeShouldntShows(this.questions, answers);
       // fire 'answered' event
       this.$emit("answered", answers, issues);
-    }
+    },
   },
   created() {
     this.plugins = Plugins.registerBuiltinPlugins();
-  }
+  },
 };
 </script>
 
@@ -609,5 +700,4 @@ export default {
 .question-hint {
   padding-left: 4px;
 }
-
 </style>

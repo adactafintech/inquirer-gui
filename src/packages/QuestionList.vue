@@ -3,6 +3,7 @@
     :value="question.answer"
     @change="onAnswerChanged"
     :items="this.question._choices"
+    :multiple="question.multiple"
     item-text="name"
     item-value="value"
     hide-details="auto"
