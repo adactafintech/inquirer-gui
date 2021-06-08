@@ -28,6 +28,19 @@ const questions0 = [
   
 const questions1 = [
   {
+    type: "list",
+    name: "mTest",
+    message: "Multiple test",
+    multiple: true,
+    choices: [
+      {name: "USA", value: 1},
+      {name: "Germany", value: 2},
+      {name: "China", value: 3},
+      {name: "Israel", value: 4},      
+    ],
+    default: [4, 1]
+  },
+  {
     name: "noType",
   },
   {
